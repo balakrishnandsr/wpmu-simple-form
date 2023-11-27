@@ -20,6 +20,8 @@ if ( ! class_exists( ' WPMU_Simple_Form_Activator_And_Deactivator' ) ) {
 		 * Changes required when install plugin
 		 */
 		public static function activate_wpmu_simple_form() {
+			$self = new self();
+			$self->create_tables();
 		}
 
 		/**
@@ -39,6 +41,35 @@ if ( ! class_exists( ' WPMU_Simple_Form_Activator_And_Deactivator' ) ) {
 				'settings' => '<a href="' . esc_url( admin_url( 'admin.php?page=wpmu-simple-form' ) ) . '">' . __( 'Settings', 'wpmu-simple-form' ) . '</a>',
 			);
 			return array_merge( $action_links, $links );
+		}
+
+		/**
+		 * Function to create tables
+		 */
+		private function create_tables() {
+			global $wpdb;
+
+			$collate = '';
+
+			if ( $wpdb->has_cap( 'collation' ) ) {
+				if ( $wpdb->has_cap( 'collation' ) ) {
+					$collate = $wpdb->get_charset_collate();
+				}
+				if ( ! empty( $wpdb->collate ) ) {
+					$collate .= " COLLATE $wpdb->collate";
+				}
+			}
+
+			include_once ABSPATH . 'wp-admin/includes/upgrade.php';
+
+			$wpmu_tables = "
+							CREATE TABLE {$wpdb->prefix}wpmu_form (
+							  	id bigint(20) UNSIGNED NOT NULL DEFAULT '0',
+								name varchar(255) NOT NULL,
+								user_notes longtext NOT NULL
+							) $collate;";
+
+			maybe_create_table( $wpdb->prefix . 'wpmu_form', $wpmu_tables );
 		}
 
 	}

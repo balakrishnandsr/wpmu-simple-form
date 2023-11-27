@@ -1,13 +1,18 @@
 <?php
 /**
- * Plugin Name:     WPMU Demo Plugin
- * Plugin URI:      PLUGIN SITE HERE
- * Description:     PLUGIN DESCRIPTION HERE
- * Author:          YOUR NAME HERE
- * Author URI:      YOUR SITE HERE
- * Text Domain:     wpmu-simple-form
- * Domain Path:     /languages
- * Version:         0.1.0
+ * Plugin Name: WPMU Demo Plugin
+ * Plugin URI:      https://github.com/balakrishnandsr
+ * Description: A simple form plugin.
+ * Version: 1.0.0
+ * Requires at least: 5.0
+ * Requires PHP: 7.1
+ * Author:  Balakrishnan D
+ * Author URI: https://github.com/balakrishnandsr
+ * License: GPLv2 or later
+ * License URI: https://www.gnu.org/licenses/gpl-3.0.en.html
+ * Update URI: ttps://wordpress.org/plugins/wpmu-simple-form/
+ * Text Domain: wpmu-simple-form
+ * Domain Path: /languages
  *
  * @package         Wpmu_Simple_Form
  */

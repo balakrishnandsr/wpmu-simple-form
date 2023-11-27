@@ -72,7 +72,7 @@ if ( ! class_exists( 'WPMU_Simple_Form_Admin' ) ) {
 				__( 'WPMU Simple Form', 'wpmu-simple-form' ),
 				'WPMU Simple Form',
 				'manage_options',
-				'wpmu-simple-Form',
+				'wpmu-simple-form',
 				array( $this, 'admin_page_content' ),
 				'',
 				6
