@@ -42,7 +42,8 @@ if ( ! class_exists( 'WPMU_Simple_Form_Ajax' ) ) {
 		 * Constructor
 		 */
 		private function __construct() {
-			add_action( 'wp_ajax_wpss_ajax', array( $this, 'wpmusf_ajax_requests' ) );
+			add_action( 'wp_ajax_wpmu_ajax', array( $this, 'wpmusf_ajax_requests' ) );
+			add_action( 'wp_ajax_nopriv_wpmu_ajax', array( $this, 'wpmusf_ajax_requests' ) );
 		}
 
 		/**
@@ -70,7 +71,7 @@ if ( ! class_exists( 'WPMU_Simple_Form_Ajax' ) ) {
 		 * @return void
 		 */
 		public function wpmusf_ajax_requests() {
-			$method_name = ! empty( $_POST['method'] ) ? 'wpss_ajax_' . sanitize_text_field( wp_unslash( $_POST['method'] ) ) : ''; //phpcs:ignore
+			$method_name = ! empty( $_POST['method'] ) ? 'wpmusf_ajax_' . sanitize_text_field( wp_unslash( $_POST['method'] ) ) : ''; //phpcs:ignore
 
 			if ( current_user_can( 'manage_options' ) && method_exists( $this, $method_name ) ) {
 				$result = $this->$method_name();
@@ -78,6 +79,14 @@ if ( ! class_exists( 'WPMU_Simple_Form_Ajax' ) ) {
 				$result = __( 'Requested method not exists', 'wpmu-simple-form' );
 			}
 			wp_send_json_success( $result );
+		}
+
+		public function wpmusf_ajax_save_wpmu_simple_form(){
+			$nonce  = ! empty( $_POST['simple_nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['simple_nonce'] ) ) : '';
+			if (  ! wp_verify_nonce( $nonce, 'simple_form_nonce' ) ) {
+				wp_send_json_error();
+			}
+
 		}
 
 
