@@ -179,7 +179,6 @@ if ( ! class_exists( 'WPMU_Simple_Form_Admin' ) ) {
 				</div>
 			</div>
 			<?php
-
 		}
 
 	}

@@ -50,7 +50,7 @@ if ( ! class_exists( ' WPMU_Simple_Form_Activator_And_Deactivator' ) ) {
 		 * Changes required when uninstall plugin
 		 */
 		public static function deactivate_wpmu_simple_form() {
-			//WE can delete the table here. But stored data will lost. SO  I am leaving here empty.
+			// WE can delete the table here. But stored data will lost. SO  I am leaving here empty.
 		}
 
 		/**
