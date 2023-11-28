@@ -128,38 +128,38 @@ if ( ! class_exists( ' WPMU_Simple_Form' ) ) {
 		 */
 		public function my_shortcode_form() {
 			ob_start();?>
-					<div class="wpmu-form-container">
-						<div class="wpmu-form-title">
-							<h3><?php esc_html_e( 'Simple Form', 'wpmu-simple-form' ); ?></h3>
-						</div>
-						<div class="mpmu-form">
-							<form name="mpmu-simple-form" method="post" id="mpmu-simple-form">
-								<div class="row">
-									<div class="label">
-										<label for="uname"><?php esc_html_e( 'User Name', 'wpmu-simple-form' ); ?></label>
-									</div>
-									<div class="wpmu-input">
-										<input type="text"  id='uname' name="user_name" placeholder="<?php esc_html_e( 'UserName', 'wpmu-simple-form' ); ?>" required>
-									</div>
-								</div>
-								<div class="row">
-									<div class="label">
-										<label for="unotes"> <?php esc_html_e( 'Notes', 'wpmu-simple-form' ); ?></label>
-									</div>
-									<div class="wpmu-input">
-										<textarea id='unotes' name="user_notes" placeholder="<?php esc_html_e( 'User Notes...', 'wpmu-simple-form' ); ?>" rows="4" cols="50" required></textarea>
-									</div>
-								</div>
-								<div>
-									<input type="hidden" name="action" value="wpmu_ajax">
-									<input type="hidden" name="method" value="save_wpmu_simple_form">
-									<input type="hidden" name="simple_nonce" value="<?php echo esc_attr( wp_create_nonce( 'simple_form_nonce' ) ); ?>">
-									<input type="submit" value="<?php esc_html_e( 'submit', 'wpmu-simple-form' ); ?>" id="mpmu-submit-button">
-									<p class="wpmu_message"></p>
-								</div>
-							</form>
-						</div>
+				<div class="wpmu-form-container">
+					<div class="wpmu-form-title">
+						<h3><?php esc_html_e( 'Simple Form', 'wpmu-simple-form' ); ?></h3>
 					</div>
+					<div class="mpmu-form">
+						<form name="mpmu-simple-form" method="post" id="mpmu-simple-form">
+							<div class="row">
+								<div class="label">
+									<label for="uname"><?php esc_html_e( 'User Name', 'wpmu-simple-form' ); ?></label>
+								</div>
+								<div class="wpmu-input">
+									<input type="text"  id='uname' name="user_name" placeholder="<?php esc_html_e( 'UserName', 'wpmu-simple-form' ); ?>" required>
+								</div>
+							</div>
+							<div class="row">
+								<div class="label">
+									<label for="unotes"> <?php esc_html_e( 'Notes', 'wpmu-simple-form' ); ?></label>
+								</div>
+								<div class="wpmu-input">
+									<textarea id='unotes' name="user_notes" placeholder="<?php esc_html_e( 'User Notes...', 'wpmu-simple-form' ); ?>" rows="4" cols="50" required></textarea>
+								</div>
+							</div>
+							<div>
+								<input type="hidden" name="action" value="wpmu_ajax">
+								<input type="hidden" name="method" value="save_wpmu_simple_form">
+								<input type="hidden" name="simple_nonce" value="<?php echo esc_attr( wp_create_nonce( 'simple_form_nonce' ) ); ?>">
+								<input type="submit" value="<?php esc_html_e( 'submit', 'wpmu-simple-form' ); ?>" id="mpmu-submit-button">
+								<p class="wpmu_message"></p>
+							</div>
+						</form>
+					</div>
+				</div>
 			<?php
 			$wpmu_form_html = apply_filters( 'wpmu_simple_form_customizable_content', ob_get_contents() );
 			ob_end_clean();
@@ -250,7 +250,7 @@ if ( ! class_exists( ' WPMU_Simple_Form' ) ) {
 		}
 
 		/**
-		 * Get stored Data.
+		 * Get stored Data for rest api.
 		 *
 		 * @param array $request Data.
 		 * @return array|object|stdClass[]|null
