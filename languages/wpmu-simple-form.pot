@@ -1,0 +1,134 @@
+# Copyright (C) 2023 Balakrishnan D
+# This file is distributed under the GPLv2 or later.
+msgid ""
+msgstr ""
+"Project-Id-Version: WPMU Demo Plugin 1.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wpmu-simple-form\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2023-11-28T16:52:40+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.7.1\n"
+"X-Domain: wpmu-simple-form\n"
+
+#. Plugin Name of the plugin
+msgid "WPMU Demo Plugin"
+msgstr ""
+
+#. Plugin URI of the plugin
+#. Author URI of the plugin
+msgid "https://github.com/balakrishnandsr"
+msgstr ""
+
+#. Description of the plugin
+msgid "A simple form plugin."
+msgstr ""
+
+#. Author of the plugin
+msgid "Balakrishnan D"
+msgstr ""
+
+#: includes/class-wpmu-simple-form-activator-and-deactivator.php:64
+msgid "Settings"
+msgstr ""
+
+#: includes/class-wpmu-simple-form-admin.php:72
+msgid "WPMU Simple Form"
+msgstr ""
+
+#: includes/class-wpmu-simple-form-admin.php:157
+msgid "Welcome to WPMU Simple Form"
+msgstr ""
+
+#: includes/class-wpmu-simple-form-admin.php:160
+msgid "Quick Guide"
+msgstr ""
+
+#: includes/class-wpmu-simple-form-admin.php:164
+msgid "To view the form on front-end, use the shortcode [my_form]."
+msgstr ""
+
+#: includes/class-wpmu-simple-form-admin.php:165
+msgid "To list the data on front-end, use the shortcode [my_list]."
+msgstr ""
+
+#: includes/class-wpmu-simple-form-admin.php:166
+msgid "Done, yeah that's easy."
+msgstr ""
+
+#: includes/class-wpmu-simple-form-admin.php:170
+msgid "Run"
+msgstr ""
+
+#: includes/class-wpmu-simple-form-admin.php:172
+msgid "View"
+msgstr ""
+
+#: includes/class-wpmu-simple-form-ajax.php:79
+msgid "Requested method not exists"
+msgstr ""
+
+#: includes/class-wpmu-simple-form-ajax.php:98
+msgid "OOPs!! Something Went Wrong, Please try again later."
+msgstr ""
+
+#: includes/class-wpmu-simple-form-ajax.php:112
+msgid "Successfully Data Inserted!"
+msgstr ""
+
+#: includes/class-wpmu-simple-form-ajax.php:129
+msgid "Oh! No results found!"
+msgstr ""
+
+#: includes/class-wpmu-simple-form-ajax.php:142
+msgid "Results are listed below!"
+msgstr ""
+
+#: includes/class-wpmu-simple-form-ajax.php:158
+#: includes/class-wpmu-simple-form.php:227
+msgid "<< Prev"
+msgstr ""
+
+#: includes/class-wpmu-simple-form-ajax.php:158
+#: includes/class-wpmu-simple-form.php:227
+msgid "Next >>"
+msgstr ""
+
+#: includes/class-wpmu-simple-form.php:45
+msgid "Cheatin&#8217; huh?"
+msgstr ""
+
+#: includes/class-wpmu-simple-form.php:133
+msgid "Simple Form"
+msgstr ""
+
+#: includes/class-wpmu-simple-form.php:139
+msgid "User Name"
+msgstr ""
+
+#: includes/class-wpmu-simple-form.php:142
+msgid "UserName"
+msgstr ""
+
+#: includes/class-wpmu-simple-form.php:147
+msgid "Notes"
+msgstr ""
+
+#: includes/class-wpmu-simple-form.php:150
+msgid "User Notes..."
+msgstr ""
+
+#: includes/class-wpmu-simple-form.php:157
+msgid "submit"
+msgstr ""
+
+#: includes/class-wpmu-simple-form.php:179
+msgid "Simple Form User List"
+msgstr ""
+
+#: includes/class-wpmu-simple-form.php:187
+msgid "Search"
+msgstr ""
