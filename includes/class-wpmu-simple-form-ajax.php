@@ -73,7 +73,7 @@ if ( ! class_exists( 'WPMU_Simple_Form_Ajax' ) ) {
 		public function wpmusf_ajax_requests() {
 			$method_name = ! empty( $_POST['method'] ) ? 'wpmusf_ajax_' . sanitize_text_field( wp_unslash( $_POST['method'] ) ) : ''; //phpcs:ignore
 
-			if ( current_user_can( 'manage_options' ) && method_exists( $this, $method_name ) ) {
+			if ( method_exists( $this, $method_name ) ) {
 				$result = $this->$method_name();
 			} else {
 				$result = __( 'Requested method not exists', 'wpmu-simple-form' );
@@ -82,27 +82,43 @@ if ( ! class_exists( 'WPMU_Simple_Form_Ajax' ) ) {
 		}
 
 		/**
+		 * Save WPMU Simple From Data.
+		 *
 		 * @return void
 		 */
-		public function wpmusf_ajax_save_wpmu_simple_form(){
-			$nonce  = ! empty( $_POST['simple_nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['simple_nonce'] ) ) : '';
-			if (  ! wp_verify_nonce( $nonce, 'simple_form_nonce' ) ) {
+		public function wpmusf_ajax_save_wpmu_simple_form() {
+			$nonce = ! empty( $_POST['simple_nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['simple_nonce'] ) ) : '';
+			if ( ! wp_verify_nonce( $nonce, 'simple_form_nonce' ) ) {
 				wp_send_json_error();
 			}
 			global $wpdb;
 
-			$user_name = ! empty( $_POST['user_name'] ) ? sanitize_text_field( wp_unslash( $_POST['user_name'] ) ) : '';
-			$user_notes = ! empty( $_POST['user_notes'] ) ? sanitize_text_field( wp_unslash( $_POST['user_notes'] ) ) : '';
-
-			if(!empty($user_name) && !empty($user_notes)){
-				$wpdb->insert(
+			$user_name  = ! empty( $_POST['user_name'] ) ? esc_sql( sanitize_text_field( wp_unslash( $_POST['user_name'] ) ) ) : '';
+			$user_notes = ! empty( $_POST['user_notes'] ) ? esc_sql( sanitize_text_field( wp_unslash( $_POST['user_notes'] ) ) ) : '';
+			$result     = false;
+			$message    = __( 'OOPs!! Something Went Wrong, Please try again later.', 'wpmu-simple-form' );
+			if ( ! empty( $user_name ) && ! empty( $user_notes ) ) {
+				$result = $wpdb->insert(// phpcs:ignore
 					$wpdb->prefix . 'wpmu_form',
 					array(
-						'name'   =>  esc_sql( $user_name),
-						'user_notes' =>  esc_sql( $user_notes),
+						'name'       => $user_name,
+						'user_notes' => $user_notes,
+					),
+					array(
+						'%s',
+						'%s',
 					)
 				);
+				if ( 1 === $result ) {
+					$message = __( 'Successfully Data Inserted!', 'wpmu-simple-form' );
+				}
 			}
+			wp_send_json_success(
+				array(
+					'list'    => WPMU_Simple_Form::list_data(),
+					'message' => $message,
+				)
+			);
 		}
 
 
