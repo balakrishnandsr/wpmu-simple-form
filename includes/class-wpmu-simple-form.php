@@ -118,6 +118,7 @@ if ( ! class_exists( ' WPMU_Simple_Form' ) ) {
 									<input type="hidden" name="method" value="save_wpmu_simple_form">
 									<input type="hidden" name="simple_nonce" value="<?php echo wp_create_nonce('simple_form_nonce'); ?>">
 									<input type="submit" value="<?php esc_html_e( 'submit', 'wpmu-simple-form' );?>" id="mpmu-submit-button">
+									<p class="wpmu_message"></p>
 								</div>
 							</form>
 						</div>
@@ -128,7 +129,49 @@ if ( ! class_exists( ' WPMU_Simple_Form' ) ) {
 			return $wpmu_form_html;
 		}
 
+		/**
+		 * List the custom table data
+		 * @return void
+		 */
+		public function my_shortcode_list(){
 
+			global $wpdb;
+			ob_start();
+			$lists = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}wpmu_form" ); // phpcs:ignore
+
+			if( empty( $lists ) ){
+				$wpmu_list_html = apply_filters( 'wpmu_simple_form_list_content', ob_get_contents(), $lists );
+				ob_end_clean();
+				return $wpmu_list_html;
+			}
+			?>
+			<div class="wpmu-form-list-container">
+				<div class="wpmu-form-list-title">
+					<h3><?php esc_html_e( 'Simple Form User List', 'wpmu-simple-form' ); ?></h3>
+
+					<div class="list-search-form">
+						<input type="text" name="wpmu_simple_search" />
+						<input type="submit" id="wpmu_search" value="<?php esc_html_e( 'Search', 'wpmu-simple-form' );  ?>" />
+					</div>
+
+				</div>
+				<div class="mpmu-form-list"><?php
+					foreach ( $lists as $list ){
+
+						$user_name = is_object($list) && isset($list->name) ? $list->name : '';
+						$user_notes= is_object($list) && isset($list->user_notes) ? $list->user_notes : ''; ?>
+						<div class="row">
+							<h5><?php echo esc_html( $user_name );?></h5>
+							<p><?php echo esc_html( $user_notes );?></p>
+						</div><?php
+					}
+					?>
+				</div>
+			</div><?php
+			$wpmu_list_html = apply_filters( 'wpmu_simple_form_list_content', ob_get_contents(), $lists );
+			ob_end_clean();
+			return $wpmu_list_html;
+		}
 	}
 
 }

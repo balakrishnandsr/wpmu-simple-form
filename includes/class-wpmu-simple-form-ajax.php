@@ -81,12 +81,28 @@ if ( ! class_exists( 'WPMU_Simple_Form_Ajax' ) ) {
 			wp_send_json_success( $result );
 		}
 
+		/**
+		 * @return void
+		 */
 		public function wpmusf_ajax_save_wpmu_simple_form(){
 			$nonce  = ! empty( $_POST['simple_nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['simple_nonce'] ) ) : '';
 			if (  ! wp_verify_nonce( $nonce, 'simple_form_nonce' ) ) {
 				wp_send_json_error();
 			}
+			global $wpdb;
 
+			$user_name = ! empty( $_POST['user_name'] ) ? sanitize_text_field( wp_unslash( $_POST['user_name'] ) ) : '';
+			$user_notes = ! empty( $_POST['user_notes'] ) ? sanitize_text_field( wp_unslash( $_POST['user_notes'] ) ) : '';
+
+			if(!empty($user_name) && !empty($user_notes)){
+				$wpdb->insert(
+					$wpdb->prefix . 'wpmu_form',
+					array(
+						'name'   =>  esc_sql( $user_name),
+						'user_notes' =>  esc_sql( $user_notes),
+					)
+				);
+			}
 		}
 
 
