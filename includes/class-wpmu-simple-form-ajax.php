@@ -121,6 +121,76 @@ if ( ! class_exists( 'WPMU_Simple_Form_Ajax' ) ) {
 			);
 		}
 
+		/**
+		 * Search WPMU Simple From Data.
+		 *
+		 * @return void
+		 */
+		public function wpmusf_ajax_search_wpmu_simple_form() {
+			$message = __( 'Oh! No results found!', 'wpmu-simple-form' );
+			$nonce   = ! empty( $_POST['search_nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['search_nonce'] ) ) : '';
+			if ( ! wp_verify_nonce( $nonce, 'simple_search_nonce' ) ) {
+				wp_send_json_error();
+			}
+
+			$data    = '';
+			$key     = ! empty( $_POST['wpmu_search_key'] ) ? sanitize_text_field( wp_unslash( $_POST['wpmu_search_key'] ) ) : '';
+			$offset  = ! empty( $_POST['offset'] ) ? sanitize_text_field( wp_unslash( $_POST['offset'] ) ) : 0;
+			$limit   = ! empty( $_POST['limit'] ) ? sanitize_text_field( wp_unslash( $_POST['limit'] ) ) : 10;
+			$results = $this->get_search_results( $key, $limit, $offset );
+
+			if ( ! empty( $results ) ) {
+				$message = __( 'Results are listed below!', 'wpmu-simple-form' );
+				foreach ( $results as $result ) {
+					$user_name  = ( ! empty( $result['name'] ) ) ? $result['name'] : '';
+					$user_notes = ( ! empty( $result['user_notes'] ) ) ? $result['user_notes'] : '';
+					$data      .= '<div class="row"><h5>' . esc_html( $user_name ) . '</h5>
+				<p>' . esc_html( $user_notes ) . '</p></div>';
+				}
+				$offset++;
+				$nonce         = wp_create_nonce( 'search_nonce' );
+				$prev_disabled = ( 10 === $offset ) ? 'disabled' : '';
+				$data         .= '<div><button type="button" class="wpmu_search_prev" data-offset="' . esc_attr( $offset ) . '" data-nonce="' . esc_attr( $nonce ) . '" data-key="' . esc_attr( $key ) . '" ' . esc_attr( $prev_disabled ) . '>' . __( '<< Prev', 'wpmu-simple-form' ) . '</button> <button type="button" class="wpmu_search_next" data-offset="' . esc_attr( $offset ) . '" data-nonce="' . esc_attr( $nonce ) . '" data-key="' . esc_attr( $key ) . '" >' . __( 'Next >>', 'wpmu-simple-form' ) . '</button> ';
+			}
+
+			wp_send_json_success(
+				array(
+					'list'    => $data,
+					'message' => $message,
+				)
+			);
+		}
+
+		/**
+		 * Get Search Results.
+		 *
+		 * @param string $key   search key.
+		 * @param int    $limit  limit.
+		 * @param int    $offset  offset.
+		 * @return array|void
+		 */
+		public function get_search_results( $key = array(), $limit = 10, $offset = 0 ) {
+			global $wpdb;
+
+			if ( empty( $key ) ) {
+				return array();
+			}
+			return $wpdb->get_results( // phpcs:ignore
+				$wpdb->prepare(
+					"SELECT * FROM {$wpdb->prefix}wpmu_form
+												  WHERE name LIKE %s or user_notes LIKE %s
+												  ORDER BY id DESC
+												  LIMIT %d
+												  OFFSET %d",
+					'%' . $wpdb->esc_like( $key ) . '%',
+					'%' . $wpdb->esc_like( $key ) . '%',
+					$limit,
+					$offset
+				),
+				ARRAY_A
+			);
+		}
+
 
 
 	}

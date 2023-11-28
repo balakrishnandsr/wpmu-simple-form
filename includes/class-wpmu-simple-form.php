@@ -143,13 +143,19 @@ if ( ! class_exists( ' WPMU_Simple_Form' ) ) {
 					<h3><?php esc_html_e( 'Simple Form User List', 'wpmu-simple-form' ); ?></h3>
 
 					<div class="list-search-form">
-						<input type="text" name="wpmu_simple_search" />
-						<input type="submit" id="wpmu_search" value="<?php esc_html_e( 'Search', 'wpmu-simple-form' ); ?>" />
+							<form name="wpmu_search" id="wpmu_search">
+							<input type="text" name="wpmu_search_key" />
+							<input type="hidden" name="action" value="wpmu_ajax">
+							<input type="hidden" name="method" value="search_wpmu_simple_form">
+							<input type="hidden" name="search_nonce" value="<?php echo esc_attr( wp_create_nonce( 'simple_search_nonce' ) ); ?>">
+							<input type="submit" id="wpmu_search_button" value="<?php esc_html_e( 'Search', 'wpmu-simple-form' ); ?>" />
+						</form>
+						<p class="wpmu_search_message"></p>
 					</div>
 
 				</div>
 				<div class="mpmu-form-list">
-					<?php echo esc_html( self::list_data() ); ?>
+					<?php echo self::list_data(); // phpcs:ignore ?>
 				</div>
 			</div>
 			<?php
@@ -165,7 +171,7 @@ if ( ! class_exists( ' WPMU_Simple_Form' ) ) {
 		 */
 		public static function list_data() {
 			global $wpdb;
-			$lists = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}wpmu_form" ); // phpcs:ignore
+			$lists = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}wpmu_form ORDER BY id DESC LIMIT 10 OFFSET 0" ); // phpcs:ignore
 			$data  = '';
 			if ( empty( $lists ) ) {
 				return $data;
@@ -176,6 +182,7 @@ if ( ! class_exists( ' WPMU_Simple_Form' ) ) {
 				$data      .= '<div class="row"><h5>' . esc_html( $user_name ) . '</h5>
 				<p>' . esc_html( $user_notes ) . '</p></div>';
 			}
+			$data .= '<div><button type="button" class="wpmu_list_prev" data-offset="0" disabled>' . __( '<< Prev', 'wpmu-simple-form' ) . '</button> <button type="button" class="wpmu_list_next" data-offset="10">' . __( 'Next >>', 'wpmu-simple-form' ) . '</button> ';
 			return $data;
 		}
 	}
