@@ -12,19 +12,19 @@ if ( ! defined( 'ABSPATH' ) ) {
 if ( ! class_exists( 'WPMU_Simple_Form_Ajax' ) ) {
 
 	/**
-	 * Main Class for WP Simple  plugin.
+	 * Main Class for WPMU Simple Form plugin.
 	 */
 	class WPMU_Simple_Form_Ajax {
 
 		/**
-		 * Variable to hold instance of WP Simple Form.
+		 * Variable to hold instance of WPMU Simple Form.
 		 *
 		 * @var $instance
 		 */
 		private static $instance = null;
 
 		/**
-		 * Get single instance of WP Simple Form Ajax.
+		 * Get single instance of WPMU Simple Form Ajax.
 		 *
 		 * @return WPMU_Simple_Form_Ajax Singleton object of WP_Simple_Form_Ajax
 		 */
@@ -95,7 +95,6 @@ if ( ! class_exists( 'WPMU_Simple_Form_Ajax' ) ) {
 
 			$user_name  = ! empty( $_POST['user_name'] ) ? esc_sql( sanitize_text_field( wp_unslash( $_POST['user_name'] ) ) ) : '';
 			$user_notes = ! empty( $_POST['user_notes'] ) ? esc_sql( sanitize_text_field( wp_unslash( $_POST['user_notes'] ) ) ) : '';
-			$result     = false;
 			$message    = __( 'OOPs!! Something Went Wrong, Please try again later.', 'wpmu-simple-form' );
 			if ( ! empty( $user_name ) && ! empty( $user_notes ) ) {
 				$result = $wpdb->insert(// phpcs:ignore
@@ -147,10 +146,16 @@ if ( ! class_exists( 'WPMU_Simple_Form_Ajax' ) ) {
 					$data      .= '<div class="row"><h5>' . esc_html( $user_name ) . '</h5>
 				<p>' . esc_html( $user_notes ) . '</p></div>';
 				}
-				$offset++;
-				$nonce         = wp_create_nonce( 'search_nonce' );
-				$prev_disabled = ( 10 === $offset ) ? 'disabled' : '';
-				$data         .= '<div><button type="button" class="wpmu_search_prev" data-offset="' . esc_attr( $offset ) . '" data-nonce="' . esc_attr( $nonce ) . '" data-key="' . esc_attr( $key ) . '" ' . esc_attr( $prev_disabled ) . '>' . __( '<< Prev', 'wpmu-simple-form' ) . '</button> <button type="button" class="wpmu_search_next" data-offset="' . esc_attr( $offset ) . '" data-nonce="' . esc_attr( $nonce ) . '" data-key="' . esc_attr( $key ) . '" >' . __( 'Next >>', 'wpmu-simple-form' ) . '</button> ';
+
+				$next_offset   = (int) $offset + 10;
+				$prev_offset   = (int) $offset - 10;
+				$prev_disabled = '';
+				if ( $offset < 10 ) {
+					$prev_offset   = 0;
+					$prev_disabled = 'disabled';
+				}
+				$nonce = wp_create_nonce( 'simple_search_nonce' );
+				$data .= '<div><button type="button" class="wpmu_search_prev" data-offset="' . esc_attr( $prev_offset ) . '" data-nonce="' . esc_attr( $nonce ) . '" data-key="' . esc_attr( $key ) . '" ' . esc_attr( $prev_disabled ) . '>' . __( '<< Prev', 'wpmu-simple-form' ) . '</button> <button type="button" class="wpmu_search_next" data-offset="' . esc_attr( $next_offset ) . '" data-nonce="' . esc_attr( $nonce ) . '" data-key="' . esc_attr( $key ) . '" >' . __( 'Next >>', 'wpmu-simple-form' ) . '</button> ';
 			}
 
 			wp_send_json_success(
@@ -191,7 +196,19 @@ if ( ! class_exists( 'WPMU_Simple_Form_Ajax' ) ) {
 			);
 		}
 
-
+		/**
+		 * WPMU simple form list
+		 *
+		 * @return void
+		 */
+		public function wpmusf_ajax_wpmu_simple_form_list() {
+			$offset = ! empty( $_POST['offset'] ) ? sanitize_text_field( wp_unslash( $_POST['offset'] ) ) : 0; //phpcs:ignore
+			wp_send_json_success(
+				array(
+					'list' => WPMU_Simple_Form::list_data( 10, $offset ),
+				)
+			);
+		}
 
 	}
 

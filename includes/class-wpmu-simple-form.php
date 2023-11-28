@@ -201,13 +201,15 @@ if ( ! class_exists( ' WPMU_Simple_Form' ) ) {
 		}
 
 		/**
-		 * List Stored Data
+		 * List Stored Data.
 		 *
+		 * @param int $limit limit.
+		 * @param int $offset offset.
 		 * @return string
 		 */
-		public static function list_data() {
+		public static function list_data( $limit = 10, $offset = 0 ) {
 			global $wpdb;
-			$lists = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}wpmu_form ORDER BY id DESC LIMIT 10 OFFSET 0" ); // phpcs:ignore
+			$lists = $wpdb->get_results( $wpdb->prepare("SELECT * FROM {$wpdb->prefix}wpmu_form ORDER BY id DESC LIMIT %d OFFSET %d", $limit, $offset  ) ); // phpcs:ignore
 			$data  = '';
 			if ( empty( $lists ) ) {
 				return $data;
@@ -218,7 +220,13 @@ if ( ! class_exists( ' WPMU_Simple_Form' ) ) {
 				$data      .= '<div class="row"><h5>' . esc_html( $user_name ) . '</h5>
 				<p>' . esc_html( $user_notes ) . '</p></div>';
 			}
-			$data .= '<div><button type="button" class="wpmu_list_prev" data-offset="0" disabled>' . __( '<< Prev', 'wpmu-simple-form' ) . '</button> <button type="button" class="wpmu_list_next" data-offset="10">' . __( 'Next >>', 'wpmu-simple-form' ) . '</button> ';
+			$next_offset = (int) $offset + 10;
+			$prev_offset = (int) $offset - 10;
+			if ( $offset < 10 ) {
+				$prev_offset = 0;
+			}
+			$nonce = wp_create_nonce( 'wpmu_list_nonce' );
+			$data .= '<div><button type="button" class="wpmu_list_prev" data-offset="' . esc_attr( $prev_offset ) . '" data-nonce="' . esc_attr( $nonce ) . '">' . __( '<< Prev', 'wpmu-simple-form' ) . '</button> <button type="button" class="wpmu_list_next" data-offset="' . esc_attr( $next_offset ) . '" data-nonce="' . esc_attr( $nonce ) . '">' . __( 'Next >>', 'wpmu-simple-form' ) . '</button> ';
 			return $data;
 		}
 
