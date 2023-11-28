@@ -50,7 +50,9 @@ if ( ! class_exists( ' WPMU_Simple_Form' ) ) {
 		 */
 		private function __construct() {
 			$this->includes();
+			add_action( 'rest_api_init', array( $this, 'register_end_points' ) );
 			add_action( 'wp_enqueue_scripts', array( $this, 'wpmusf_add_scripts' ), 100 );
+
 			add_shortcode( 'my_form', array( $this, 'my_shortcode_form' ) );
 			add_shortcode( 'my_list', array( $this, 'my_shortcode_list' ) );
 		}
@@ -83,6 +85,40 @@ if ( ! class_exists( ' WPMU_Simple_Form' ) ) {
 			);
 
 			wp_localize_script( 'custom_script', 'custom_script', $js_data );
+		}
+
+		/**
+		 * Register all the required custom end points
+		 */
+		public function register_end_points() {
+			register_rest_route(
+				'wpmu-simple-form-api/v1',
+				'/wpmu-simple-form',
+				array(
+					'methods'             => WP_REST_Server::CREATABLE,
+					'permission_callback' => '__return_true',
+					'callback'            => array( $this, 'add_data' ),
+
+				)
+			);
+			register_rest_route(
+				'wpmu-simple-form-api/v1',
+				'/wpmu-simple-form',
+				array(
+					'methods'             => WP_REST_Server::READABLE,
+					'permission_callback' => '__return_true',
+					'callback'            => array( $this, 'get_data' ),
+				)
+			);
+			register_rest_route(
+				'wpmu-simple-form-api/v1',
+				'/wpmu-simple-form/(?P<id>[\d]+)',
+				array(
+					'methods'             => WP_REST_Server::READABLE,
+					'permission_callback' => '__return_true',
+					'callback'            => array( $this, 'get_data' ),
+				)
+			);
 		}
 
 		/**
@@ -184,6 +220,48 @@ if ( ! class_exists( ' WPMU_Simple_Form' ) ) {
 			}
 			$data .= '<div><button type="button" class="wpmu_list_prev" data-offset="0" disabled>' . __( '<< Prev', 'wpmu-simple-form' ) . '</button> <button type="button" class="wpmu_list_next" data-offset="10">' . __( 'Next >>', 'wpmu-simple-form' ) . '</button> ';
 			return $data;
+		}
+
+		/**
+		 * Store the data that comes from rest api to database.
+		 *
+		 * @param array $request Data.
+		 * @return bool|int|mysqli_result|null
+		 */
+		public static function add_data( $request ) {
+			global $wpdb;
+
+			$user_name  = ! empty( $request['user_name'] ) ? esc_sql( sanitize_text_field( wp_unslash( $request['user_name'] ) ) ) : '';
+			$user_notes = ! empty( $request['user_notes'] ) ? esc_sql( sanitize_textarea_field( wp_unslash( $request['user_notes'] ) ) ) : '';
+			if ( ! empty( $user_name ) && ! empty( $user_notes ) ) {
+				return $wpdb->insert(// phpcs:ignore
+					$wpdb->prefix . 'wpmu_form',
+					array(
+						'name'       => $user_name,
+						'user_notes' => $user_notes,
+					),
+					array(
+						'%s',
+						'%s',
+					)
+				);
+			}
+			return false;
+		}
+
+		/**
+		 * Get stored Data.
+		 *
+		 * @param array $request Data.
+		 * @return array|object|stdClass[]|null
+		 */
+		public static function get_data( $request ) {
+			global $wpdb;
+			$id = ! empty( $request['id'] ) ? esc_sql( sanitize_text_field( wp_unslash( $request['id'] ) ) ) : '';
+			if ( empty( $id ) ) {
+				return $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}wpmu_form"); // phpcs:ignore
+			}
+			 return $wpdb->get_results( $wpdb->prepare("SELECT * FROM {$wpdb->prefix}wpmu_form WHERE id = %d", $id ) ); // phpcs:ignore
 		}
 	}
 
