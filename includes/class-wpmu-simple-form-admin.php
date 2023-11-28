@@ -166,10 +166,6 @@ if ( ! class_exists( 'WPMU_Simple_Form_Admin' ) ) {
 							<li> <?php esc_html_e( "Done, yeah that's easy.", 'wpmu-simple-form' ); ?></li>
 						</ol>
 						</p>
-
-						<a href="javascript:void(0)" class="button button-primary button-hero" > <?php esc_html_e( 'Run', 'wpmu-simple-form' ); ?> </a>
-
-						<a href="javascript:void(0)" class="button button-primary button-hero" > <?php esc_html_e( 'View', 'wpmu-simple-form' ); ?> </a>
 					</div>
 					<div class="welcome-panel-column-container">
 
