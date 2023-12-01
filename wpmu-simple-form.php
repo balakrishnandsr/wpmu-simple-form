@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: WPMU Demo Plugin
- * Plugin URI:      https://github.com/balakrishnandsr
+ * Plugin URI:  https://github.com/balakrishnandsr
  * Description: A simple form plugin.
  * Version: 1.0.0
  * Requires at least: 5.0
