@@ -1,9 +1,8 @@
 
 {
   "name": "wpmu-simple-form",
-  "version": "0.1.0",
-  "main": "Gruntfile.js",
-  "author": "YOUR NAME HERE",
+  "version": "1.0.0",
+  "author": "Balakrishnan D   ",
   "scripts" : {
     "start" : "grunt default" ,
     "readme" : "grunt readme",
